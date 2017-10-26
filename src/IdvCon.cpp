@@ -1,12 +1,13 @@
 #include "IdvCon.h"
 
 #include <iostream>
+#include <fstream>
+#include <string>
 
 using namespace std;
 
 namespace IdvConSpace {
-  void IdvCon::setInName(string input_string) {
-    input_name = input_string;
-  }
+  IdvCon::IdvCon() {}
+  IdvCon::~IdvCon() {}
 }
 
