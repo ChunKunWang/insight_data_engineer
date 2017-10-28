@@ -31,7 +31,20 @@ int main(int argc, char *argv[])
   if (inFile.is_open() && zipFile.is_open() && dateFile.is_open()) {
     while (getline(inFile, line))
     {
-      cout << line << '\n';
+      //cout << line << '\n';
+      if (!obj.parseLine(line)) continue;
+      cout << "ok" << endl;
+      if (obj.getID().empty() || obj.getAMT() < 1 || !obj.getOID().empty()) continue;
+
+//      cout << "ID: "  << obj.getID()  << endl;
+//      cout << "ZIP: " << obj.getZIP() << endl;
+//      cout << "DT: "  << obj.getDT()  << endl;
+//      cout << "AMT: " << obj.getAMT() << endl;
+//      cout << "OID: " << obj.getOID() << endl;
+
+      if (obj.getZIP().size() == 5) obj.pushZipTable();
+      if (!obj.getDT().empty())  obj.pushDateTable();
+
       zipFile << line << '\n';
       dateFile << line << '\n';
     }
