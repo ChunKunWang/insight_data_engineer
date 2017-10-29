@@ -3,10 +3,10 @@
 
 #include <iostream>
 #include <fstream>
-#include <tr1/unordered_map>
+#include <map>
+#include <vector>
 
 using namespace std;
-using namespace std::tr1;
 
 namespace IdvConSpace {
 
@@ -27,29 +27,28 @@ namespace IdvConSpace {
       double AMT;
     };
 
-    struct DateEntry {
-      string ID;
-      string DT;
-      double NUM;
-      double AMT;
-    };
-
     public:
       IdvCon();
+      ~IdvCon();
       bool parseLine(const string line);
-      const void pushZipTable() const;
-      const void pushDateTable() const;
-      string getID() const;
+      const void pushZipTable();
+
+      string getZEid();
+      string getZEzip();
+      double getZEnum();
+      double getZEamt();
+
+      string getID()  const;
       string getZIP() const;
-      string getDT() const;
+      string getDT()  const;
       double getAMT() const;
       string getOID() const;
-      ~IdvCon();
 
+      vector<ZipEntry>  ZipTable;
+      string _ZipKey;
     private:
       Entry *entry;
-      unordered_map<string, ZipEntry> ZipTable;
-      unordered_map<string, DateEntry> DateTable;
+      map<string, double> ZipIndex;
   };
 }
 

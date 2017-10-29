@@ -4,11 +4,13 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <map>
+#include <vector>
 #include <stdlib.h>
-#include <tr1/unordered_map>
+#include <cmath>
+#include <tgmath.h>
 
 using namespace std;
-using namespace std::tr1;
 
 namespace IdvConSpace {
   IdvCon::IdvCon() {}
@@ -38,26 +40,29 @@ namespace IdvConSpace {
     return true;
   }
 
-  const void IdvCon::pushZipTable() const {
+  const void IdvCon::pushZipTable() {
     string index = entry->ID + entry->ZIP;
-    ZipEntry *ptr = new ZipEntry();
-    ZipEntry  temp;
-    ptr->ID  = entry->ID;
-    ptr->ZIP = entry->ZIP;
-    ptr->NUM = 1;
-    ptr->AMT = entry->AMT;
-    //pair<string, double> it(index, 0);
-    pair<string, ZipEntry> it;
-    it.first = index;
-    it.second.ID = entry->ID;
-    unordered_map<std::string, std::int> test;
-    test.insert(index, int(0));
-    cout << "Call pushZipTable, index: " << index << endl;
+    _ZipKey.assign(index); 
+    if (!ZipIndex[index]) {
+      ZipEntry tmp;
+      ZipIndex[index] = (double)ZipIndex.size();
+      tmp.ID = entry->ID;
+      tmp.ZIP = entry->ZIP;
+      tmp.NUM = (double)1;
+      tmp.AMT = entry->AMT;
+      ZipTable.push_back(tmp);
+    }
+    else {
+      double i = ZipIndex[index];
+      ZipTable[i - 1].NUM++;
+      ZipTable[i - 1].AMT += entry->AMT;
+    }
   }
 
-  const void IdvCon::pushDateTable() const {
-    cout << "Call pushDateTable!" << endl;
-  }
+  string IdvCon::getZEid()  {return ZipTable[ZipIndex[_ZipKey] - 1].ID;}
+  string IdvCon::getZEzip() {return ZipTable[ZipIndex[_ZipKey] - 1].ZIP;}
+  double IdvCon::getZEnum() {return ZipTable[ZipIndex[_ZipKey] - 1].NUM;}
+  double IdvCon::getZEamt() {return ZipTable[ZipIndex[_ZipKey] - 1].AMT;}
 
   string IdvCon::getID() const  {return entry->ID;}
   string IdvCon::getZIP() const {return entry->ZIP;}

@@ -1,10 +1,23 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cmath>
 #include "IdvCon.h"
 
 using namespace std;
 using namespace IdvConSpace;
+
+struct DateEntry {
+  string ID;
+  string DT;
+  double NUM;
+  double AMT;
+};
+
+vector<DateEntry> DateTable;
+map<string, double> DateIndex;
+
+void pushDateTable(IdvCon* ptr);
 
 void usage() {
   cout << "Instruction: ..." << endl;
@@ -31,31 +44,61 @@ int main(int argc, char *argv[])
   if (inFile.is_open() && zipFile.is_open() && dateFile.is_open()) {
     while (getline(inFile, line))
     {
-      //cout << line << '\n';
       if (!obj.parseLine(line)) continue;
-      cout << "ok" << endl;
       if (obj.getID().empty() || obj.getAMT() < 1 || !obj.getOID().empty()) continue;
 
-//      cout << "ID: "  << obj.getID()  << endl;
-//      cout << "ZIP: " << obj.getZIP() << endl;
-//      cout << "DT: "  << obj.getDT()  << endl;
-//      cout << "AMT: " << obj.getAMT() << endl;
-//      cout << "OID: " << obj.getOID() << endl;
+      if (obj.getZIP().size() == 5) {
+        obj.pushZipTable();
+        double median = obj.getZEamt()/obj.getZEnum();
 
-      if (obj.getZIP().size() == 5) obj.pushZipTable();
-      if (!obj.getDT().empty())  obj.pushDateTable();
+        zipFile << obj.getZEid() << " "  
+          << obj.getZEzip() << " " 
+          << (int)(median + 0.5) << " "
+          << obj.getZEnum() << " " 
+          << obj.getZEamt() << endl;
+      }
+      if (!obj.getDT().empty())  pushDateTable(&obj);
+    }
 
-      zipFile << line << '\n';
-      dateFile << line << '\n';
+    for (int i = 0; i < DateTable.size(); i++) {
+      double median = DateTable[i].AMT/DateTable[i].NUM;
+      dateFile << DateTable[i].ID  << " "
+        << DateTable[i].DT << " "
+        << (int)(median + 0.5) << " "
+        << DateTable[i].NUM << " "
+        << DateTable[i].AMT << endl;
     }
     inFile.close();
     zipFile.close();
     dateFile.close();
   }
-  else cout << "Fail" << endl;
+  else cout << "Open files fail!" << endl;
 
   cout << "find_political_donors: Hello World!" << endl;
   return 0;
 }
 
+void pushDateTable(IdvCon* ptr) {
+  string index = ptr->getID() + ptr->getDT();
+  if (!DateIndex[index]) {
+    DateEntry tmp;
+    DateIndex[index] = (double)DateIndex.size();
+    tmp.ID  = ptr->getID();
+    tmp.DT  = ptr->getDT();
+    tmp.NUM = (double)1;
+    tmp.AMT = ptr->getAMT();
+    DateTable.push_back(tmp);
+  }
+  else {
+    double i = DateIndex[index];
+    DateTable[i - 1].NUM++;
+    DateTable[i - 1].AMT += ptr->getAMT();
+  }
+//  double j = DateIndex[index]-1;
+//  cout << DateTable[j].ID  << " "
+//       << DateTable[j].DT  << " "
+//       << DateTable[j].NUM << " "
+//       << DateTable[j].AMT << " "
+//       << DateTable.size() << endl;
+}
 
