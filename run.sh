@@ -4,3 +4,12 @@
 #
 #python ./src/find_political_donors.py ./input/itcont.txt ./output/medianvals_by_zip.txt ./output/medianvals_by_date.txt
 
+# Compile the codes in src to generate the exectuable file
+cd src/
+make clean
+make
+cd ..
+
+# Run commend
+./src/find_political_donors ./input/itcont.txt ./output/medianvals_by_zip.txt ./output/medianvals_by_date.txt
+
