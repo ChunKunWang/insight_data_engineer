@@ -28,27 +28,45 @@ namespace IdvConSpace {
     };
 
     public:
-      IdvCon();
-      ~IdvCon();
-      bool parseLine(const string line);
-      const void pushZipTable();
+    IdvCon();
+    ~IdvCon();
+    bool parseLine(const string line);
+    const void pushZipTable();
 
-      string getZEid();
-      string getZEzip();
-      double getZEnum();
-      double getZEamt();
+    string getZEid();
+    string getZEzip();
+    double getZEnum();
+    double getZEamt();
 
-      string getID()  const;
-      string getZIP() const;
-      string getDT()  const;
-      double getAMT() const;
-      string getOID() const;
+    string getID()  const;
+    string getZIP() const;
+    string getDT()  const;
+    double getAMT() const;
+    string getOID() const;
 
-      vector<ZipEntry>  ZipTable;
-      string _ZipKey;
+    vector<ZipEntry>  ZipTable;
+    string _ZipKey;
     private:
-      Entry *entry;
-      map<string, double> ZipIndex;
+    Entry *entry;
+    map<string, double> ZipIndex;
+  };
+
+  class IdvConDate{
+    struct DateEntry {
+      string ID;
+      string DT;
+      double NUM;
+      double AMT;
+    };
+    public:
+      IdvConDate();
+      ~IdvConDate();
+      void pushDateTable(IdvCon* ptr);
+      void writeToFile(ofstream& dateFile);
+      vector<DateEntry> DateTable;
+    private:
+      DateEntry *entry;
+      map<string, double> DateIndex;
   };
 }
 

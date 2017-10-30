@@ -71,5 +71,44 @@ namespace IdvConSpace {
   string IdvCon::getOID() const {return entry->OID;}
 
   IdvCon::~IdvCon() {}
+
+  IdvConDate::IdvConDate() {}
+
+  void IdvConDate::pushDateTable(IdvCon* ptr) {
+    string index = ptr->getID() + ptr->getDT();
+    if (!DateIndex[index]) {
+      DateEntry tmp;
+      DateIndex[index] = (double)DateIndex.size();
+      tmp.ID  = ptr->getID();
+      tmp.DT  = ptr->getDT();
+      tmp.NUM = (double)1;
+      tmp.AMT = ptr->getAMT();
+      DateTable.push_back(tmp);
+    }
+    else {
+      double i = DateIndex[index];
+      DateTable[i - 1].NUM++;
+      DateTable[i - 1].AMT += ptr->getAMT();
+    }
+    double j = DateIndex[index]-1;
+    cout << DateTable[j].ID  << " "
+      << DateTable[j].DT  << " "
+      << DateTable[j].NUM << " "
+      << DateTable[j].AMT << " "
+      << DateTable.size() << endl;
+  }
+
+  void IdvConDate::writeToFile(ofstream& dateFile) {
+    for (int i = 0; i < DateTable.size(); i++) {
+      double median = DateTable[i].AMT/DateTable[i].NUM;
+      dateFile << DateTable[i].ID  << " "
+        << DateTable[i].DT << " "
+        << (int)(median + 0.5) << " "
+        << DateTable[i].NUM << " "
+        << DateTable[i].AMT << endl;
+    }
+  }
+
+  IdvConDate::~IdvConDate() {}
 }
 
