@@ -54,10 +54,10 @@ int main(int argc, char *argv[])
         double median = obj.getZEamt()/obj.getZEnum();
 
         // Write new coming update to zip file
-        zipFile << obj.getZEid() << " "  
-          << obj.getZEzip() << " " 
-          << (int)(median + 0.5) << " "
-          << obj.getZEnum() << " " 
+        zipFile << obj.getZEid() << "|"  
+          << obj.getZEzip() << "|" 
+          << (int)(median + 0.5) << "|"
+          << obj.getZEnum() << "|" 
           << obj.getZEamt() << endl;
       }
 

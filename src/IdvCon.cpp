@@ -90,21 +90,21 @@ namespace IdvConSpace {
       DateTable[i - 1].NUM++;
       DateTable[i - 1].AMT += ptr->getAMT();
     }
-    double j = DateIndex[index]-1;
-    cout << DateTable[j].ID  << " "
-      << DateTable[j].DT  << " "
-      << DateTable[j].NUM << " "
-      << DateTable[j].AMT << " "
-      << DateTable.size() << endl;
+//    double j = DateIndex[index]-1;
+//    cout << DateTable[j].ID  << " "
+//      << DateTable[j].DT  << " "
+//      << DateTable[j].NUM << " "
+//      << DateTable[j].AMT << " "
+//      << DateTable.size() << endl;
   }
 
   void IdvConDate::writeToFile(ofstream& dateFile) {
     for (int i = 0; i < DateTable.size(); i++) {
       double median = DateTable[i].AMT/DateTable[i].NUM;
-      dateFile << DateTable[i].ID  << " "
-        << DateTable[i].DT << " "
-        << (int)(median + 0.5) << " "
-        << DateTable[i].NUM << " "
+      dateFile << DateTable[i].ID  << "|"
+        << DateTable[i].DT << "|"
+        << (int)(median + 0.5) << "|"
+        << DateTable[i].NUM << "|"
         << DateTable[i].AMT << endl;
     }
   }
